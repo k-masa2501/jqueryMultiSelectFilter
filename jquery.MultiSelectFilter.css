@@ -1,0 +1,80 @@
+/*! MultiSelectFilter v0.1 | (c) masanori kitajima | https://github.com/k-masa2501/MultiSelectFilter */
+.div_multi_ctl{
+    position: absolute;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 2px;
+}
+
+.div_multi_ctl li{
+    list-style:none;
+}
+
+.div_multi_ctl ul{
+    margin:0px;
+    padding:0px;
+}
+
+.div_multi_ctl input[type='text'] {
+    border-radius: 5px;
+    border: solid 1px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.div_select_ctl {
+    border: 1px solid #a2a2a2;
+    border-radius: 5px 5px 5px 5px;
+    background: #00b2f7;
+    margin-bottom: 2px;
+    padding: 1px;
+    width: 100%;
+    float: left;
+    box-sizing: border-box;
+}
+
+.div_select_ctl li {
+    font-size: 10px;
+    color: #FFFFFF;
+    float: left;
+}
+
+.div_select_ctl li:nth-child(1){
+    float: right;
+}
+
+
+.div_select_ctl li:hover { color: #FF0000; cursor: pointer;}
+
+.multi_select_bt{
+    background: #ffffff;
+    border: 1px solid #000000;
+    color:#111;
+    width: 100px;
+    padding: 2px 5px 0px 5px;
+    overflow: hidden;
+}
+
+.multi_select_bt span:nth-child(1){
+    float: left;
+    width: 80%;
+}
+
+.multi_select_bt span:nth-child(2){
+    float: right;
+    margin-top: 0px;
+    width: 10%;
+}
+
+.div_ul{
+    max-height: 200px;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.ui-icon-color-white {
+    background-image: url("images/ui-icons_ffffff_256x240.png") !important; /* ホワイト */
+}
