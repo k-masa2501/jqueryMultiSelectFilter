@@ -5,7 +5,7 @@ Jquery library is required.
 
 ![エビフライトライアングル](readme/image.png "サンプル")
 
-`<select id="select-name" name="select-name[]" multiple>` 
+`<select id="select-name" name="select-name[]" multiple>`  
 The id and name attributes are required.
 
 `$('#select-name').MultiSelectFilter('init',`  
