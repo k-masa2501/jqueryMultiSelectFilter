@@ -18,7 +18,7 @@
       var li_unchk_all = null;
       var li_close = null;
       var span_text = null;
-      var i=0,len=0, selected=null;
+      var i=0,len=0;
 
       var option = methods._get_options(arg);
 
@@ -27,23 +27,22 @@
         obj = $(o_this[i]);
 
         selection = new Array();
-        selected = obj.val();
         ul_list = $("<ul></ul>");
         div_select_ctl = $("<div class='div_select_ctl'></div>");
         div_input = $("<div></div>");
         div_ul = $("<div class='div_ul'></div>");
         inTxt_filter = $("<input type='text' placeholder='filter'>");
         span_text = $("<span>"+ option.defalult +"</span>");
-        button = $("<button class='multi_select_bt'><span class='ui-icon ui-icon-triangle-1-s'></span></button>");
+        button = $("<button data-onmouse='0' data-onclick='0' class='multi_select_bt'><span class='ui-icon ui-icon-triangle-1-s'></span></button>");
         div_multi_ctl = $("<div class='div_multi_ctl' tabIndex='0' style='display: none;'></div>");
         li_chk_all = $("<li><span class='ui-icon ui-icon-check ui-icon-color-white'></span>" + option.check_all + "</li>");
         li_unchk_all = $("<li><span class='ui-icon ui-icon-cancel ui-icon-color-white'></span>" + option.uncheck_all + "</li>");
         li_close = $("<li><span class='ui-icon ui-icon-circle-close ui-icon-color-white'></span>");
         chkbox_id = obj.attr('id') + '-chkbox-id';
 
-        button.css('width',String(option.btWidth)+'px');
-        button.css('height',String(option.btHeight)+'px');
-        div_multi_ctl.css('width',String(option.btWidth)+'px');
+        button.css('width',String(option.width)+'px');
+        button.css('height',String(option.height)+'px');
+        div_multi_ctl.css('width',String(option.width)+'px');
 
         $('body').append(div_multi_ctl);
         obj.after(button);
@@ -79,7 +78,7 @@
 
         methods._add_event_lisner(obj);
 
-        methods._set_button_text(obj.val(), obj);
+        methods._add_valule(obj.val(), obj);
 
       }
     },
@@ -134,36 +133,53 @@
         obj.show();
       }
     },
-    _set_button_text: function (arg, obj){
+    check_all: function(arg, o_this){
 
-      var ids = arg;
-      var index = null;
-      var tmp = new Array();
-      var selection = obj.data('selection');
-      var span_text = obj.data('span_text');
-      var option = obj.data('option');
+      var selection = null;
+      var obj = null;
+      var data = null;
 
-      if (ids == null || typeof ids != "object"){
-        ids = new Array();
-      }
+      for(var i=0,objlen=o_this.length; i < objlen; i++) {
 
-      for (var i=0,len=selection.length; i< len; i++){
-        index = ids.indexOf(selection[i][0]);
-        if (-1 < index) {
-          tmp.push(selection[i][1]);
-          selection[i][2] = 1;
+        obj = $(o_this[i]);
+        data = new Array();
+
+        selection = obj.data('selection');
+
+        for(var cnt=0,len=selection.length; cnt < len; cnt++){
+          selection[cnt][2] = 1;
+          data.push(selection[cnt][0]);
         }
+
+        methods._set_button_label(cnt, selection, obj);
+
+        obj.attr('data-count', cnt);
+        obj.val(data);
+
       }
 
+    },
+    uncheck_all: function(arg, o_this){
 
-      if (tmp.length <= option.textlen){
-        span_text.text(tmp.join(','));
-      }else{
-        span_text.text(tmp.length + option.selected);
+      var selection = null;
+      var obj = null;
+
+      for(var i=0,objlen=o_this.length; i < objlen; i++) {
+
+        obj = $(o_this[i]);
+
+        selection = obj.data('selection');
+
+        for(var cnt=0,len=selection.length; cnt < len; cnt++){
+          selection[cnt][2] = 0;
+        }
+
+        methods._set_button_label(0, selection, obj);
+
+        obj.attr('data-count', 0);
+        obj.val([]);
+
       }
-
-      obj.attr('data-count',tmp.length);
-
     },
     _add_valule: function (arg, obj){
 
@@ -196,6 +212,7 @@
 
     },
     _add_event_lisner: function(obj){
+
       var div_multi_ctl = obj.data('div_multi_ctl');
       var inTxt_filter = obj.data('inTxt_filter');
       var chkbox_id = obj.data('chkbox_id');
@@ -204,25 +221,29 @@
       var li_unchk_all = obj.data('li_unchk_all');
       var li_close = obj.data('li_close');
 
-      button.click(function(){
-        methods._click(obj);
+      button.click($.proxy(function(){
+        methods._click(this);
+      },obj));
+
+      button.mouseenter(function(){
+        methods._mouseenter(this);
+      });
+
+      button.mouseleave(function(){
+        methods._mouseleave(this);
       });
 
       inTxt_filter.focusout(function(){
         div_multi_ctl.focus();
       });
 
-      inTxt_filter.keyup(function() {
-        methods._keyup(obj);
-      });
+      inTxt_filter.on('input propertychange',$.proxy(function(){
+        methods._keyup(this);
+      }, obj));
 
-      inTxt_filter.on('input propertychange',function(){
-        methods._keyup(obj);
-      });
-
-      div_multi_ctl.focusout(function(){
-        methods._focusout(obj);
-      });
+      div_multi_ctl.focusout($.proxy(function(){
+        methods._focusout(this);
+      },obj));
 
       div_multi_ctl.mouseenter(function(){
         methods._mouseenter(this);
@@ -232,21 +253,21 @@
         methods._mouseleave(this);
       });
 
-      li_chk_all.click(function(){
-        methods._check_all(obj);
-      });
+      li_chk_all.click($.proxy(function(){
+        methods._check_all(this);
+      },obj));
 
-      li_unchk_all.click(function(){
-        methods._uncheck_all(obj);
-      });
+      li_unchk_all.click($.proxy(function(){
+        methods._uncheck_all(this);
+      }, obj));
 
-      li_close.click(function(){
-        methods._close(obj);
-      });
+      li_close.click($.proxy(function(){
+        methods._close(this);
+      },obj));
 
-      $(document).on('click', '.'+chkbox_id, function(){
-        methods._click_checkbox(this, obj);
-      });
+      $(document).on('click', '.'+chkbox_id, $.proxy(function(e){
+        methods._click_checkbox(e.currentTarget, this);
+      }, obj));
 
     },
     _check_all: function(obj){
@@ -256,6 +277,8 @@
       var checkboxes = $('.'+obj.data('chkbox_id'));
       var selection = obj.data('selection');
       var arry_index = 0;
+
+      if (null == tmp) tmp = new Array();
 
       for(cnt=0,len=checkboxes.length; cnt < len; cnt++){
         arry_index = $(checkboxes[cnt]).attr('data-index');
@@ -279,6 +302,8 @@
       var count = Number(obj.attr('data-count'));
       var arry_index = 0;
 
+      if (null == tmp) tmp = new Array();
+
       for(var cnt=0,unchkcnt=0,len=checkboxes.length; cnt < len; cnt++){
         if ($(checkboxes[cnt]).prop('checked')){
           arry_index = $(checkboxes[cnt]).attr('data-index');
@@ -298,28 +323,40 @@
     _close: function(obj){
 
       var div_multi_ctl = obj.data('div_multi_ctl');
+      var button = obj.data('button');
 
-      div_multi_ctl.attr('data-onmouse','0');
+      button.attr('data-onclick','0');
       div_multi_ctl.hide();
 
     },
     _click: function(obj){
-      methods._search(obj);
-      methods._show(obj);
+
+      var button = obj.data('button');
+
+      if ('0' == button.attr('data-onclick')){
+        methods._search(obj);
+        methods._show(obj);
+      }else{
+        methods._close(obj);
+      }
     },
     _focusout: function (obj){
       var div_multi_ctl = obj.data('div_multi_ctl');
+      var button = obj.data('button');
 
-      if ('1' != div_multi_ctl.attr('data-onmouse')){
-        div_multi_ctl.hide();
+      if ('1' != div_multi_ctl.attr('data-onmouse') && '1' != button.attr('data-onmouse')){
+        methods._close(obj);
       }
     },
-    _click_checkbox: function(checkbox, obj){
+    _click_checkbox: function(_checkbox, obj){
 
+      var checkbox = $(_checkbox);
       var selection = obj.data('selection');
-      var tmp = "" == obj.val() ? new Array() :obj.val();
+      var tmp = obj.val();
       var arry_index = $(checkbox).attr('data-index');
       var count = Number(obj.attr('data-count'));
+
+      if (null == tmp) tmp = new Array();
 
       if ($(checkbox).prop('checked')){
         count++;
@@ -337,6 +374,8 @@
       obj.val(tmp);
     },
     _set_button_label: function(count, selection, obj){
+
+      if (null == selection) return;
 
       var option = obj.data('option');
       var checked_arry = new Array();
@@ -381,9 +420,9 @@
       for (var i=0,len=selection.length; i < len; i++){
         if (regexp.test(selection[i][1])){
           checked =  1 == selection[i][2] ? "checked='checked'":"";
-          tmp = tmp + "<li><input type='checkbox' class='"+ chkbox_id +"' name='"+ chkbox_id + "' "+ checked +
+          tmp = tmp + "<li><label><input type='checkbox' class='"+ chkbox_id +"' name='"+ chkbox_id + "' "+ checked +
               " data-text='"+ selection[i][1] +"' data-index='"+ String(i) +"' value='"+ selection[i][0] +"'>"+
-              selection[i][1] +"</li>";
+              selection[i][1] +"</label></li>";
         }
       }
 
@@ -416,12 +455,13 @@
       div_multi_ctl.css('top', String(top)+'px');
       div_multi_ctl.show();
       div_multi_ctl.focus();
+      button.attr('data-onclick','1');
     },
     _get_options: function(arg){
 
       var delay = 300;
-      var btWidth = 150;
-      var btHeight = 20;
+      var width = 150;
+      var height = 20;
       var textlen = 2;
       var selected = "selection";
       var defalult = "unselected";
@@ -431,8 +471,8 @@
 
       if (arg != null && typeof arg == 'object'){
         if ('delay' in arg && isFinite(arg.delay)) delay = arg.delay;
-        if ('btWidth' in arg && isFinite(arg.btWidth)) btWidth = arg.btWidth;
-        if ('btHeight' in arg && isFinite(arg.btHeight)) btHeight = arg.btHeight;
+        if ('width' in arg && isFinite(arg.width)) width = arg.width;
+        if ('height' in arg && isFinite(arg.height)) height = arg.height;
         if ('textlen' in arg && isFinite(arg.textlen)) textlen = arg.textlen;
         if ('selected' in arg && typeof arg.selected == 'string') selected = arg.selected;
         if ('defalult' in arg && typeof arg.defalult == 'string') defalult = arg.defalult;
@@ -440,9 +480,10 @@
         if ('uncheck_all' in arg && typeof arg.uncheck_all == 'string') uncheck_all = arg.uncheck_all;
         if ('filter' in arg && typeof arg.filter == 'boolean') filter = arg.filter;
       }
-      return {delay: delay,
-        btWidth: btWidth,
-        btHeight: btHeight,
+      return {
+        delay: delay,
+        width: width,
+        height: height,
         textlen: textlen,
         selected: selected,
         defalult: defalult,

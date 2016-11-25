@@ -10,6 +10,7 @@
 
 .div_multi_ctl li{
     list-style:none;
+    margin: 2px;
 }
 
 .div_multi_ctl ul{
@@ -29,7 +30,7 @@
     border-radius: 5px 5px 5px 5px;
     background: #00b2f7;
     margin-bottom: 2px;
-    padding: 1px;
+    padding: 2px;
     width: 100%;
     float: left;
     box-sizing: border-box;
@@ -65,7 +66,7 @@
 .multi_select_bt span:nth-child(2){
     float: right;
     margin-top: 0px;
-    width: 10%;
+    width: 15px;
 }
 
 .div_ul{
@@ -73,6 +74,15 @@
     overflow-y: scroll;
     box-sizing: border-box;
     width: 100%;
+}
+
+.div_ul ul li label{
+    width: 100%;
+    display: block;
+}
+
+.div_ul ul li label:hover{
+    font-weight: bold;
 }
 
 .ui-icon-color-white {
