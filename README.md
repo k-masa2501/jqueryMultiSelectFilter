@@ -10,7 +10,7 @@ The id and name attributes are required.
 
 `$('#select-name').MultiSelectFilter('init',`  
 `　　{delay: 300,`  
-`　　Width: 150,`  
+`　　width: 150,`  
 `　　textlen: 3,`  
 `　　selected: '個選択',`  
 `　　defalult: '-- 未選択 --',`  
