@@ -403,9 +403,9 @@
     _keyup: function(obj){
       var delay = obj.data('option').delay;
       var div_multi_ctl = obj.data('div_multi_ctl');
-      methods._search_delay((function(){
+      methods._delay_proc((function(obj){
         methods._search(obj);
-      }),delay);
+      })(obj),delay);
     },
     _search: function(obj){
       var ul_list = obj.data('ul_list');
@@ -440,7 +440,7 @@
       }
       return regexp;      
     },
-    _search_delay: function(callback, ms){
+    _delay_proc: function(callback, ms){
       return (function(callback, ms){
         clearTimeout (methods.timer);
         methods.timer = setTimeout(callback, ms);
