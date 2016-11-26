@@ -8,7 +8,7 @@
       var selection = null;
       var button = null;
       var div_multi_ctl = null;
-      var div_ul = null;
+      var div_ulList = null;
       var div_select_ctl = null;
       var div_input = null;
       var ul_list = null;
@@ -30,10 +30,10 @@
         ul_list = $("<ul></ul>");
         div_select_ctl = $("<div class='div_select_ctl'></div>");
         div_input = $("<div></div>");
-        div_ul = $("<div class='div_ul'></div>");
+        div_ulList = $("<div class='div_ulList'></div>");
         inTxt_filter = $("<input type='text' placeholder='filter'>");
         span_text = $("<span>"+ option.defalult +"</span>");
-        button = $("<button data-onmouse='0' data-onclick='0' class='multi_select_bt'><span class='ui-icon ui-icon-triangle-1-s'></span></button>");
+        button = $("<button data-onmouse='0' data-onclick='0' class='select_button'><span class='ui-icon ui-icon-triangle-1-s'></span></button>");
         div_multi_ctl = $("<div class='div_multi_ctl' tabIndex='0' style='display: none;'></div>");
         li_chk_all = $("<li><span class='ui-icon ui-icon-check ui-icon-color-white'></span>" + option.check_all + "</li>");
         li_unchk_all = $("<li><span class='ui-icon ui-icon-cancel ui-icon-color-white'></span>" + option.uncheck_all + "</li>");
@@ -53,8 +53,8 @@
         div_select_ctl.append(li_unchk_all);
         div_input.html(inTxt_filter);
         if (option.filter) div_select_ctl.append(div_input);
-        div_multi_ctl.append(div_ul);
-        div_ul.html(ul_list);
+        div_multi_ctl.append(div_ulList);
+        div_ulList.html(ul_list);
 
         for (var cnt=0,children=obj.children(),length=children.length; cnt < length; cnt++){
           selection.push([$(children[cnt]).val(),$(children[cnt]).text(),0]);
@@ -271,8 +271,7 @@
 
     },
     _check_all: function(obj){
-
-      var cnt = 0, len=0;
+      
       var tmp = obj.val();
       var checkboxes = $('.'+obj.data('chkbox_id'));
       var selection = obj.data('selection');
@@ -280,7 +279,7 @@
 
       if (null == tmp) tmp = new Array();
 
-      for(cnt=0,len=checkboxes.length; cnt < len; cnt++){
+      for(var cnt=0,len=checkboxes.length; cnt < len; cnt++){
         arry_index = $(checkboxes[cnt]).attr('data-index');
         tmp.push(selection[arry_index][0]);
         selection[arry_index][2] = 1;
