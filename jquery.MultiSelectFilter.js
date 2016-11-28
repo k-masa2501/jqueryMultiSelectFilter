@@ -109,6 +109,7 @@
         button.off();
         div_multi_ctl.off();
         $(document).off("click", '.'+chkbox_id);
+        $(window).off('resize'+'.'+chkbox_id);
         li_chk_all.off();
         li_unchk_all.off();
         li_close.off();
@@ -268,6 +269,10 @@
       $(document).on('click', '.'+chkbox_id, $.proxy(function(e){
         methods._click_checkbox(e.currentTarget, this);
       }, obj));
+
+      $(window).on('resize'+'.'+chkbox_id, $.proxy(function(){
+        methods._close(this);
+      },obj));
 
     },
     _check_all: function(obj){
