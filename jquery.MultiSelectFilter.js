@@ -336,8 +336,11 @@
     _click: function(obj){
 
       var button = obj.data('button');
+      var inTxt_filter = null;
 
       if ('0' == button.attr('data-onclick')){
+        inTxt_filter = obj.data('inTxt_filter');
+        inTxt_filter.val('');
         methods._search(obj);
         methods._show(obj);
       }else{
