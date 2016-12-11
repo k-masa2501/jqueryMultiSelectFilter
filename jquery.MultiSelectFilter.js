@@ -20,11 +20,13 @@
       var span_text = null;
       var i=0,len=0;
 
-      var option = methods._get_options(arg);
+      var option = null;
 
       for(i=0,len=o_this.length; i < len; i++){
 
         obj = $(o_this[i]);
+
+        option = methods._get_options(arg, obj);
 
         selection = new Array();
         ul_list = $("<ul></ul>");
@@ -35,8 +37,8 @@
         span_text = $("<span>"+ option.defalult +"</span>");
         button = $("<button data-onmouse='0' data-onclick='0' class='select_button'><span class='ui-icon ui-icon-triangle-1-s'></span></button>");
         div_multi_ctl = $("<div class='div_multi_ctl' tabIndex='0' style='display: none;'></div>");
-        li_chk_all = $("<li><span class='ui-icon ui-icon-check ui-icon-color-white'></span>" + option.check_all + "</li>");
-        li_unchk_all = $("<li><span class='ui-icon ui-icon-cancel ui-icon-color-white'></span>" + option.uncheck_all + "</li>");
+        li_chk_all = $(option.check_all_tag);
+        li_unchk_all = $(option.uncheck_all_tag);
         li_close = $("<li><span class='ui-icon ui-icon-circle-close ui-icon-color-white'></span>");
         chkbox_id = obj.attr('id') + '-chkbox-id';
 
@@ -78,7 +80,7 @@
 
         methods._add_event_lisner(obj);
 
-        methods._add_valule(obj.val(), obj);
+        option.set_value(obj);
 
       }
     },
@@ -182,9 +184,9 @@
 
       }
     },
-    _add_valule: function (arg, obj){
+    __set_multiValule: function (obj){
 
-      var ids = arg;
+      var ids = obj.val();
       var index = null;
       var tmp = new Array();
       var selection = obj.data('selection');
@@ -212,6 +214,14 @@
       obj.attr('data-count',tmp.length);
 
     },
+    __set_singleValule: function (obj){
+      
+      var span_text = obj.data('span_text');
+
+      span_text.text(obj.children(':selected').text());
+      obj.attr('data-count',1);
+
+    },
     _add_event_lisner: function(obj){
 
       var div_multi_ctl = obj.data('div_multi_ctl');
@@ -222,8 +232,8 @@
       var li_unchk_all = obj.data('li_unchk_all');
       var li_close = obj.data('li_close');
 
-      button.click($.proxy(function(){
-        methods._click(this);
+      button.click($.proxy(function(e){
+        methods._click(e, this);
       },obj));
 
       button.mouseenter(function(){
@@ -267,7 +277,7 @@
       },obj));
 
       $(document).on('click', '.'+chkbox_id, $.proxy(function(e){
-        methods._click_checkbox(e.currentTarget, this);
+        this.data('option').click_tag(e.currentTarget, this);
       }, obj));
 
       $(window).on('resize'+'.'+chkbox_id, $.proxy(function(){
@@ -333,7 +343,9 @@
       div_multi_ctl.hide();
 
     },
-    _click: function(obj){
+    _click: function(e, obj){
+
+      e.preventDefault();
 
       var button = obj.data('button');
       var inTxt_filter = null;
@@ -355,7 +367,7 @@
         methods._close(obj);
       }
     },
-    _click_checkbox: function(_checkbox, obj){
+    __click_checkbox: function(_checkbox, obj){
 
       var checkbox = $(_checkbox);
       var selection = obj.data('selection');
@@ -379,6 +391,18 @@
 
       obj.attr('data-count', count);
       obj.val(tmp);
+    },
+    __click_button: function(_button, obj){
+
+      var button = $(_button);
+      var option = obj.data('option');
+      var span_text = obj.data('span_text');
+
+      obj.attr('data-count', 1);
+      obj.val($(button).val());
+
+      span_text.text($(button).text());
+
     },
     _set_button_label: function(count, selection, obj){
 
@@ -415,26 +439,45 @@
       })(obj),delay);
     },
     _search: function(obj){
-      var ul_list = obj.data('ul_list');
-      var inTxt_filter = obj.data('inTxt_filter');
-      var selection = obj.data('selection');
-      var chkbox_id = obj.data('chkbox_id');
-      var checked = '';
 
+      var tag = '';
+      var ul_list = obj.data('ul_list');
+      var selection = obj.data('selection');
+      var inTxt_filter = obj.data('inTxt_filter');
+      var chkbox_id = obj.data('chkbox_id');
       var regexp = methods._set_regexp(inTxt_filter.val());
-      var tmp = '';
+      var option = obj.data('option');
 
       for (var i=0,len=selection.length; i < len; i++){
         if (regexp.test(selection[i][1])){
-          checked =  1 == selection[i][2] ? "checked='checked'":"";
-          tmp = tmp + "<li><label><input type='checkbox' class='"+ chkbox_id +"' name='"+ chkbox_id + "' "+ checked +
-              " data-text='"+ selection[i][1] +"' data-index='"+ String(i) +"' value='"+ selection[i][0] +"'>"+
-              selection[i][1] +"</label></li>";
+          tag += option.create_tag(selection[i], chkbox_id, i);
         }
       }
 
-      if ('' == tmp) tmp = '<li>not exist.</li>';
-      ul_list[0].innerHTML = tmp;
+      if ('' == tag) tag = '<li>not exist.</li>';
+      ul_list[0].innerHTML = tag;
+    },
+    __create_checkbox: function(selection, chkbox_id, index){
+
+      var checked = '';
+      var result = '';
+
+      checked =  1 == selection[2] ? "checked='checked'":"";
+      result  = "<li><label><input type='checkbox' class='"+ chkbox_id +"' name='"+ chkbox_id + "' "+ checked;
+      result += " data-text='"+ selection[1] +"' data-index='"+ String(index) +"' value='"+ selection[0] +"'>";
+      result += selection[1] +"</label></li>";
+      return result
+
+    },
+    __create_button: function(selection, chkbox_id, index){
+
+      var result = '';
+
+      result = "<li><button class='"+ chkbox_id +"' name='"+ chkbox_id + "'";
+      result += " data-text='"+ selection[1] +"' data-index='"+ String(index) +"' value='"+ selection[0] +"'>";
+      result += selection[1] + "</button></li>";
+
+      return result
     },
     _set_regexp: function (val){
       var regexp = '';
@@ -464,29 +507,53 @@
       div_multi_ctl.focus();
       button.attr('data-onclick','1');
     },
-    _get_options: function(arg){
+    _get_options: function(arg, obj){
 
       var delay = 300;
       var width = 150;
       var height = 20;
-      var textlen = 2;
+      var textlen = 1;
       var selected = "selection";
       var defalult = "unselected";
-      var check_all = "check all";
-      var uncheck_all = "uncheck all";
+      var check_all = null;
+      var uncheck_all = null;
+      var check_all_tag = '';
+      var uncheck_all_tag = '';
       var filter = true;
+      var mulicheck = true;
+      var set_value = methods.__set_multiValule;
+      var click_tag = methods.__click_checkbox;
+      var create_tag = methods.__create_checkbox;
 
       if (arg != null && typeof arg == 'object'){
         if ('delay' in arg && isFinite(arg.delay)) delay = arg.delay;
         if ('width' in arg && isFinite(arg.width)) width = arg.width;
         if ('height' in arg && isFinite(arg.height)) height = arg.height;
-        if ('textlen' in arg && isFinite(arg.textlen)) textlen = arg.textlen;
+        if ('textlen' in arg && isFinite(arg.textlen) && 0 < arg.textlen) textlen = arg.textlen;
         if ('selected' in arg && typeof arg.selected == 'string') selected = arg.selected;
         if ('defalult' in arg && typeof arg.defalult == 'string') defalult = arg.defalult;
         if ('check_all' in arg && typeof arg.check_all == 'string') check_all = arg.check_all;
         if ('uncheck_all' in arg && typeof arg.uncheck_all == 'string') uncheck_all = arg.uncheck_all;
         if ('filter' in arg && typeof arg.filter == 'boolean') filter = arg.filter;
       }
+
+      if (check_all){
+        check_all_tag = "<li><span class='ui-icon ui-icon-check ui-icon-color-white'></span>" + check_all + "</li>";
+      }
+
+      if (uncheck_all){
+        uncheck_all_tag = "<li><span class='ui-icon ui-icon-cancel ui-icon-color-white'></span>" + uncheck_all + "</li>";
+      }
+
+      if (null == obj.attr('multiple')){
+        mulicheck = false;
+        check_all_tag = '';
+        uncheck_all_tag = '';
+        set_value = methods.__set_singleValule;
+        click_tag = methods.__click_button;
+        create_tag = methods.__create_button;
+      }
+
       return {
         delay: delay,
         width: width,
@@ -496,7 +563,13 @@
         defalult: defalult,
         check_all: check_all,
         uncheck_all: uncheck_all,
-        filter: filter
+        check_all_tag: check_all_tag,
+        uncheck_all_tag: uncheck_all_tag,
+        filter: filter,
+        mulicheck: mulicheck,
+        set_value: set_value,
+        click_tag: click_tag,
+        create_tag: create_tag
       };
     },
     timer: 0

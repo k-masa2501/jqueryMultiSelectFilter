@@ -22,7 +22,7 @@ div.div_multi_ctl input[type='text'] {
     border-radius: 5px;
     border: solid 1px;
     box-sizing: border-box;
-    width: 100%;
+    width: 80%;
 }
 
 div.div_select_ctl {
@@ -87,4 +87,18 @@ div.div_ulList ul li label:hover{
 
 .ui-icon-color-white {
     background-image: url("images/ui-icons_ffffff_256x240.png") !important; /* ホワイト */
+}
+
+div.div_ulList ul li button {
+    background-color: #f9f9f9;
+    border: 1px solid #d8d8d8;
+    color: #333;
+    width: 100%;
+    padding: 1px 6px;
+    border-radius: 3px;
+}
+div.div_ulList ul li button:hover {
+    background-color: #fff;
+    border-color: #59b1eb;
+    color: #59b1eb;
 }
