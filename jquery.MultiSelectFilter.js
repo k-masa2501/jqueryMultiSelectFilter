@@ -131,7 +131,7 @@
         obj.removeData('span_text');
         obj.removeData('li_close');
 
-        obj.val([]).change();// ★
+        obj.val([]).change();
 
         obj.show();
       }
@@ -157,7 +157,7 @@
         methods._set_button_label(cnt, selection, obj);
 
         obj.attr('data-count', cnt);
-        obj.val(data).change(); // ★
+        obj.val(data).change();
 
       }
 
@@ -180,7 +180,7 @@
         methods._set_button_label(0, selection, obj);
 
         obj.attr('data-count', 0);
-        obj.val([]).change(); // ★
+        obj.val([]).change();
 
       }
     },
@@ -305,7 +305,7 @@
       methods._set_button_label(tmp.length, selection, obj);
 
       obj.attr('data-count', tmp.length);
-      obj.val(tmp).change(); // ★
+      obj.val(tmp).change();
 
     },
     _uncheck_all: function(obj){
@@ -331,7 +331,7 @@
       methods._set_button_label(count-unchkcnt, selection, obj);
 
       obj.attr('data-count', count-unchkcnt);
-      obj.val(tmp).change(); // ★
+      obj.val(tmp).change();
 
     },
     _close: function(obj){
@@ -390,7 +390,7 @@
       methods._set_button_label(count, selection, obj);
 
       obj.attr('data-count', count);
-      obj.val(tmp).change();// ★
+      obj.val(tmp).change();
     },
     __click_button: function(_button, obj){
 
@@ -399,7 +399,7 @@
       var span_text = obj.data('span_text');
 
       obj.attr('data-count', 1);
-      obj.val($(button).val()).change();　// ★
+      obj.val($(button).val()).change();
 
       span_text.text($(button).text());
 
