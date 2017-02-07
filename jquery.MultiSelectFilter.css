@@ -42,7 +42,7 @@ div.div_select_ctl li {
     float: left;
 }
 
-div.div_select_ctl li:nth-child(1){
+div.div_select_ctl li:nth-child(3){
     float: right;
 }
 

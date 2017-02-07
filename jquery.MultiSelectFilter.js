@@ -50,9 +50,9 @@
         obj.after(button);
         button.prepend(span_text);
         div_multi_ctl.html(div_select_ctl);
-        div_select_ctl.html(li_close);
-        div_select_ctl.append(li_chk_all);
+        div_select_ctl.html(li_chk_all);
         div_select_ctl.append(li_unchk_all);
+        div_select_ctl.append(li_close);
         div_input.html(inTxt_filter);
         if (option.filter) div_select_ctl.append(div_input);
         div_multi_ctl.append(div_ulList);
