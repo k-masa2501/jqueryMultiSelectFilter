@@ -54,7 +54,7 @@ button.select_button{
     border: 1px solid #000000;
     color:#111;
     width: 100px;
-    padding: 2px 5px 0px 5px;
+    padding: 0px 5px 0px 5px;
     overflow: hidden;
 }
 
